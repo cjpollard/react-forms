@@ -1,5 +1,6 @@
 import * as React from 'react';
-import DayPickerInput from 'react-day-picker';
+/// <reference path="../typings/day-picker-input.d.ts" />
+import DayPickerInput from 'react-day-picker/DayPickerInput';
 
 export interface IDatePickerProps {
     onDayChange: (day: string, inputProps: object) => void,

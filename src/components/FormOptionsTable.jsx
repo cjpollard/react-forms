@@ -23,15 +23,6 @@ class FormOptionsTable extends Component {
         }
     }
 
-    /* componentDidUpdate() {
-        if(this.props.options !== undefined) {
-            this.updateFormInfo(this.props.options);
-            this.setState({
-                options: this.props.options
-            });
-        }
-    } */
-
     handleOptionChange = (e) => {
         e && e.preventDefault();
         const {name, value} = e.target;

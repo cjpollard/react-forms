@@ -35,11 +35,13 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         super(props);
     }
 
-    private buildTimesList = () => {
+    private buildTimesList = (interval = 1) => {
         let times = [];
-        for(let i=0; i<24; i++) {
+        const upperLimit = interval*24;
+        for(let i=0; i<upperLimit; i++) {
             const leadingO = i<10 ? "0": "";
-            const time = leadingO + i.toString() + ":00";
+            const trailing30 = upperLimit === 48 && upperLimit%2 !== 0 ? "30" : "00";
+            const time = leadingO + i.toString() + ":" + trailing30;
             times.push({"value": time, "label": time});
         }
         return times;
@@ -92,10 +94,9 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
 
     private renderFileInput(label: string, type: string) {
         return (
-            <div className="inputSection formFlex clearBoth">
-                <label htmlFor="fileUpload">{label}</label>
+            <FieldWrapper id="fileUpload" label={label}>
                 <DropzoneComponent config={this.fileDropConfig} djsConfig={{params: {fileType: type}, ...this.djsConfig}} eventHandlers={this.djsEvents}/>
-            </div>
+            </FieldWrapper>
         );
     }
 
@@ -125,7 +126,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         const fields = obj[key].fields;
         const fileType = obj[key].fileType;
         const pLabel = startCase(parentKey);
-        const times = this.buildTimesList();
+        const times = this.buildTimesList(2);
 
         // If key is an int, we know we're looking at an array.
         if(!isNaN(parseInt(key, 10))) {

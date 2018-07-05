@@ -1,29 +1,29 @@
-export const arrayIntoObj = (array, obj, value) => {
+export const arrayIntoObj = (array: Array<any>, obj: object, value: any): object => {
     let retObj = obj;
     if(array.length > 1) {
-        retObj[array[0]] = Object.assign({}, retObj[array[0]], arrayIntoObj(array.splice(1), {}, value));
+        retObj[array[0]] = {...retObj[array[0]], ...arrayIntoObj(array.splice(1), {}, value)};
     } else {
         retObj[array[0]] = value;
     }
     return retObj;
 };
 
-export const unflattenFormData = (formData) => {
-    let expanded = {};
-    let finalForm = {};
+export const unflattenFormData = (formData: object): object => {
+    let expanded: object = {};
+    let finalForm: object = {};
     for(let prop in formData) {
         if(prop.indexOf(":") > 0) {
-            expanded = Object.assign({}, expanded, arrayIntoObj(prop.split(":"), expanded, formData[prop]));
+            expanded = {...expanded, ...arrayIntoObj(prop.split(":"), expanded, formData[prop])};
             delete formData[prop];
         }
     }
-    finalForm = Object.assign({}, formData, expanded);
+    finalForm ={...formData, ...expanded};
     return finalForm;
 };
 
 // Fleshes out the schema's arrays with duplicate objects or empty strings to the length of the array sent in formData.
-const lengthenArrays = (formData, objMap) => {
-    let returnObj = objMap;
+const lengthenArrays = (formData: object, objMap: object): object => {
+    let returnObj: object = objMap;
     for(let prop in objMap) {
         if(!isNaN(parseInt(prop, 10)) && formData.hasOwnProperty(prop)) {
             for(let i=0; i<Object.keys(formData).length; i++) {
@@ -39,8 +39,8 @@ const lengthenArrays = (formData, objMap) => {
     return returnObj;
 };
 
-export const formToObjectMapping = (formData, objMap, write = true) => {
-    let returnObj = lengthenArrays(formData, objMap); // Arrays can be deep inside schema object, so need to do this every time.
+export const formToObjectMapping = (formData: object, objMap: object, write: boolean = true): object => {
+    let returnObj: object = lengthenArrays(formData, objMap); // Arrays can be deep inside schema object, so need to do this every time.
     for(let prop in objMap) {
         if(typeof objMap[prop] === "string" && formData.hasOwnProperty(prop) && write) {
             returnObj[prop] = formData[prop];
@@ -57,7 +57,7 @@ export const formToObjectMapping = (formData, objMap, write = true) => {
     return returnObj;
 };
 
-export const mergeFormWithSchema = (formData, objMap) => {
+export const mergeFormWithSchema = (formData: object, objMap: object): object => {
     let fullData = unflattenFormData(formData);
     return formToObjectMapping(fullData, objMap);
 };
