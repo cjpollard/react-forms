@@ -1,4 +1,4 @@
-const expect = require("chai").expect;
+import {expect} from "chai";
 const fn = require("../../../user_modules/functions");
 
 describe("Module function tests", () => {
@@ -128,41 +128,6 @@ describe("Module function tests", () => {
             "number": {type: "number"}
         };
         expect(fn.validate(data, schema)).to.be.true;
-    });
-
-    it("can log out back to the admin page", (done) => {
-        fn.logout({session: {siteInformation: "info"}}, {redirect: (url) => {
-            expect(url).to.equal("/admin/");
-            done();
-        }});
-    });
-
-    it("can log out back to the home page", (done) => {
-        fn.logout({session: {user: "user", destroy: () => {}}}, {redirect: (url) => {
-            expect(url).to.equal("/");
-            done();
-        }});
-    });
-
-    it("redirects if user is not logged in", (done) => {
-        fn.checkLoggedIn({_parsedOriginalUrl: {pathname: "."}, session: {}}, {redirect: (url) => {
-            expect(url).to.equal("/");
-            done();
-        }});
-    });
-
-    it("redirects if user is logged in and site session has timed out", (done) => {
-        fn.checkLoggedIn({_parsedOriginalUrl: {pathname: "/editor"}, session: {user: {id: 1}}}, {redirect: (url) => {
-            expect(url).to.equal("/admin/");
-            done();
-        }});
-    });
-
-    it("redirects if user is logged in and site session has not timed out", (done) => {
-        fn.checkLoggedIn({_parsedOriginalUrl: {pathname: "/admin"}, session: {user: {id: 1}, siteInformation: ""}}, {redirect: (url) => {
-            expect(url).to.equal("/editor/");
-            done();
-        }});
     });
 
 });

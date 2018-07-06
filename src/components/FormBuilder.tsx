@@ -3,10 +3,13 @@ import {DropzoneComponent} from 'react-dropzone-component';
 import {startCase} from 'lodash';
 import {DatePicker, FieldWrapper} from './index';
 import FormOptionsTable from './FormOptionsTable';
+import {FormWrapper} from './FormWrapper';
 
 export interface IFormBuilderProps {
     formData: any,
+    formScheme: object,
     handleInputChange: (event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => void,
+    id: string,
     modifyState: (state: any) => void
 }
 
@@ -35,8 +38,8 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         super(props);
     }
 
-    private buildTimesList = (interval = 1) => {
-        let times = [];
+    private buildTimesList = (interval = 1): Array<object> => {
+        let times: Array<object> = [];
         const upperLimit = interval*24;
         for(let i=0; i<upperLimit; i++) {
             const leadingO = i<10 ? "0": "";
@@ -104,7 +107,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         return <FormOptionsTable editable={false} fields={fields} formData={this.props.formData} formKey={key} modifyState={this.props.modifyState} options={this.props.formData[key]} renderInput={this.renderFromObjectKey}/>;
     }
 
-    private renderInnerFormSection(value: string, key: string, label:string) {
+    private renderInnerFormSection(value: object, key: string, label:string) {
         return (
             <div>
                 <label>{label}</label>
@@ -119,14 +122,14 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderFromObjectKey = (key: string, obj: Object, parentKey: string): any => {
-        const value = obj[key].type;
-        const label = obj[key].label;
-        const options = obj[key].options;
-        const fields = obj[key].fields;
-        const fileType = obj[key].fileType;
-        const pLabel = startCase(parentKey);
-        const times = this.buildTimesList(2);
+    private renderFromObjectKey = (key: string, obj: Object, parentKey?: string): any => {
+        const value: any = obj[key].type;
+        const label: string = obj[key].label;
+        const options: Array<any> = obj[key].options;
+        const fields: Array<any> = obj[key].fields;
+        const fileType: string = obj[key].fileType;
+        const pLabel: string = startCase(parentKey);
+        const times: Array<object> = this.buildTimesList(2);
 
         // If key is an int, we know we're looking at an array.
         if(!isNaN(parseInt(key, 10))) {
@@ -158,8 +161,11 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
     }
 
     public render() {
+        const {formScheme, id} = this.props;
         return(
-            <></>
+            <FormWrapper id={id}>
+                {Object.keys(formScheme).map(key => this.renderFromObjectKey(key, formScheme))}
+            </FormWrapper>
         );
     }
 }
