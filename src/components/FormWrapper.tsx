@@ -4,7 +4,7 @@ export interface IFormWrapperProps {id: string}
 
 export class FormWrapper extends React.Component<IFormWrapperProps> {
 
-    constructor(props: any) {
+    constructor(props: IFormWrapperProps) {
         super(props);
     }
 

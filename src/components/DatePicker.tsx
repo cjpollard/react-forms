@@ -12,7 +12,7 @@ export interface IDatePickerProps {
 
 export class DatePicker extends React.Component<IDatePickerProps> {
 
-    constructor(props: any) {
+    constructor(props: IDatePickerProps) {
         super(props);
     }
 

@@ -14,19 +14,19 @@ export interface IFormBuilderProps {
 }
 
 export class FormBuilder extends React.Component<IFormBuilderProps> {
-    private fileDropConfig = {
+    private fileDropConfig: object = {
         iconFileTypes: [".jpg", ".png", ".gif"],
         showFiletypeIcon: true,
         postUrl: "/apis/editor/uploadFiles"
     };
 
-    private djsConfig = {
+    private djsConfig: object = {
         acceptedFiles: "image/*",
         maxFileSize: 0.5,
         maxFiles: 5
     };
 
-    private djsEvents = {
+    private djsEvents: object = {
         success: () => {}
     };
 
@@ -40,22 +40,22 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
 
     private buildTimesList = (interval = 1): Array<object> => {
         let times: Array<object> = [];
-        const upperLimit = interval*24;
+        const upperLimit: number = interval*24;
         for(let i=0; i<upperLimit; i++) {
-            const leadingO = i<10 ? "0": "";
-            const trailing30 = upperLimit === 48 && upperLimit%2 !== 0 ? "30" : "00";
-            const time = leadingO + i.toString() + ":" + trailing30;
+            const leadingO: string = i<10 ? "0": "";
+            const trailing30: string = upperLimit === 48 && upperLimit%2 !== 0 ? "30" : "00";
+            const time: string = leadingO + i.toString() + ":" + trailing30;
             times.push({"value": time, "label": time});
         }
         return times;
     }
 
-    private handleDayChange = (day: string, inputProps: any) => {
+    private handleDayChange = (day: string, inputProps: any): void => {
         const name: string = inputProps.name || "date";
-        // this.props.modifyState({[name]: day});
+        this.props.modifyState({[name]: day});
     }
 
-    private renderStringInput(label: string, name: string, placeholder: string) {
+    private renderStringInput(label: string, name: string, placeholder: string): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <input type="text" name={name} placeholder={placeholder} id={name} key={name}
@@ -64,7 +64,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderTextareaInput(label: string, name: string) {
+    private renderTextareaInput(label: string, name: string): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <textarea placeholder="Enter description" name={name} id="description" rows={4} cols={30} key={name}
@@ -73,7 +73,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderDateInput(label: string, name: string) {
+    private renderDateInput(label: string, name: string): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <DatePicker onDayChange={this.handleDayChange} {...((this.editAdd || this.useExisting) && {value: this.props.formData ? this.props.formData[name] : ""})}
@@ -82,7 +82,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderDropdown(label: string, options: Array<any>, key: string, multi?: boolean) {
+    private renderDropdown(label: string, options: Array<any>, key: string, multi?: boolean): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <select className="optionTitle" key={key} name={key} {...(multi && {multiple: true, size: 8})} defaultValue="default" onChange={this.props.handleInputChange}>
@@ -95,7 +95,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderFileInput(label: string, type: string) {
+    private renderFileInput(label: string, type: string): JSX.Element {
         return (
             <FieldWrapper id="fileUpload" label={label}>
                 <DropzoneComponent config={this.fileDropConfig} djsConfig={{params: {fileType: type}, ...this.djsConfig}} eventHandlers={this.djsEvents}/>
@@ -103,11 +103,11 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderTable(label: string, key: string, fields: Array<any>) {
+    private renderTable(label: string, key: string, fields: Array<any>): JSX.Element {
         return <FormOptionsTable editable={false} fields={fields} formData={this.props.formData} formKey={key} modifyState={this.props.modifyState} options={this.props.formData[key]} renderInput={this.renderFromObjectKey}/>;
     }
 
-    private renderInnerFormSection(value: object, key: string, label:string) {
+    private renderInnerFormSection(value: object, key: string, label: string): JSX.Element {
         return (
             <div>
                 <label>{label}</label>
@@ -122,7 +122,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderFromObjectKey = (key: string, obj: Object, parentKey?: string): any => {
+    private renderFromObjectKey = (key: string, obj: Object, parentKey?: string): JSX.Element => {
         const value: any = obj[key].type;
         const label: string = obj[key].label;
         const options: Array<any> = obj[key].options;
@@ -158,9 +158,10 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         if(typeof value === "object") {
             return this.renderInnerFormSection(value, key, label);
         }
+        return <></>;
     }
 
-    public render() {
+    public render(): JSX.Element {
         const {formScheme, id} = this.props;
         return(
             <FormWrapper id={id}>

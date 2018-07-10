@@ -48,7 +48,7 @@ export const formToObjectMapping = (formData: object, objMap: object, write: boo
         if(typeof objMap[prop] === "object") {
             for(let formProp in formData) {
                 if(typeof formData[formProp] === "object") {
-                    const write = formProp === prop; // This prevents data buried in an array from being overwritten.
+                    const write: boolean = formProp === prop; // This prevents data buried in an array from being overwritten.
                     returnObj[prop] = formToObjectMapping(formData[formProp], objMap[prop], write);
                 }
             }

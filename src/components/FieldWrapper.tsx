@@ -4,7 +4,7 @@ export interface IFieldWrapperProps {id: string, label: string}
 
 export class FieldWrapper extends React.Component<IFieldWrapperProps> {
 
-    constructor(props: any) {
+    constructor(props: IFieldWrapperProps) {
         super(props);
     }
 
