@@ -8,7 +8,7 @@ export class FormWrapper extends React.Component<IFormWrapperProps> {
         super(props);
     }
 
-    public render() {
+    public render(): JSX.Element {
         const {id, children} = this.props;
         return (
             <form id={id}>

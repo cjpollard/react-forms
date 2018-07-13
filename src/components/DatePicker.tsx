@@ -16,19 +16,19 @@ export class DatePicker extends React.Component<IDatePickerProps> {
         super(props);
     }
 
-    private formatDate = (d: Date): string => {
+    public formatDate = (d: Date): string => {
         const year = d.getFullYear();
         const month = "" + (d.getMonth() + 1);
         const day = "" + d.getDate();
         return day + "-" + month + "-" + year;
     }
 
-    private onDayChange = (day: string) => {
+    public onDayChange = (day: string) => {
         this.props.onDayChange(day, this.props.inputProps);
     }
 
-    private parseDate = (str: string): Date | void => {
-        const split: Array<string> = str.split("-");
+    public parseDate = (str: string): Date | void => {
+        const split: string[] = str.split("-");
         if (split.length !== 3) {
             return undefined;
         }
@@ -42,7 +42,7 @@ export class DatePicker extends React.Component<IDatePickerProps> {
         return new Date(year, month, day);
     }
 
-    render() {
+    public render(): JSX.Element {
         return (
             <DayPickerInput onDayChange={this.onDayChange} {...(this.props.value && {value: this.props.value})}
                 formatDate={this.formatDate} parseDate={this.parseDate} placeholder={this.props.placeholder} inputProps={this.props.inputProps} />

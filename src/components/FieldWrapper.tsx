@@ -8,7 +8,7 @@ export class FieldWrapper extends React.Component<IFieldWrapperProps> {
         super(props);
     }
 
-    public render() {
+    public render(): JSX.Element {
         const {id, label, children} = this.props;
         return (
             <div className='form-group'>

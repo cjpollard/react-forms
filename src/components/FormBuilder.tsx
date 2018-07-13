@@ -1,11 +1,13 @@
+import {startCase} from 'lodash';
 import * as React from 'react';
 import {DropzoneComponent} from 'react-dropzone-component';
-import {startCase} from 'lodash';
-import {DatePicker, FieldWrapper} from './index';
+
 import FormOptionsTable from './FormOptionsTable';
 import {FormWrapper} from './FormWrapper';
+import {DatePicker, FieldWrapper} from './index';
 
 export interface IFormBuilderProps {
+    fileUpdater: (file: object) => void,
     formData: any,
     formScheme: object,
     handleInputChange: (event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => void,
@@ -16,8 +18,8 @@ export interface IFormBuilderProps {
 export class FormBuilder extends React.Component<IFormBuilderProps> {
     private fileDropConfig: object = {
         iconFileTypes: [".jpg", ".png", ".gif"],
-        showFiletypeIcon: true,
-        postUrl: "/apis/editor/uploadFiles"
+        postUrl: "/apis/editor/uploadFiles",
+        showFiletypeIcon: true
     };
 
     private djsConfig: object = {
@@ -27,7 +29,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
     };
 
     private djsEvents: object = {
-        success: () => {}
+        success: this.props.fileUpdater
     };
 
     private editAdd: boolean;
@@ -38,8 +40,8 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         super(props);
     }
 
-    private buildTimesList = (interval = 1): Array<object> => {
-        let times: Array<object> = [];
+    public buildTimesList = (interval = 1): object[] => {
+        const times: object[] = [];
         const upperLimit: number = interval*24;
         for(let i=0; i<upperLimit; i++) {
             const leadingO: string = i<10 ? "0": "";
@@ -50,12 +52,12 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         return times;
     }
 
-    private handleDayChange = (day: string, inputProps: any): void => {
+    public handleDayChange = (day: string, inputProps: any): void => {
         const name: string = inputProps.name || "date";
         this.props.modifyState({[name]: day});
     }
 
-    private renderStringInput(label: string, name: string, placeholder: string): JSX.Element {
+    public renderStringInput(label: string, name: string, placeholder: string): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <input type="text" name={name} placeholder={placeholder} id={name} key={name}
@@ -64,29 +66,29 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderTextareaInput(label: string, name: string): JSX.Element {
+    public renderTextareaInput(label: string, name: string): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <textarea placeholder="Enter description" name={name} id="description" rows={4} cols={30} key={name}
-                    {...((this.editAdd || this.useExisting) && {value: this.props.formData ? this.props.formData[name] : ""})} onChange={this.props.handleInputChange}></textarea>
+                    {...((this.editAdd || this.useExisting) && {value: this.props.formData ? this.props.formData[name] : ""})} onChange={this.props.handleInputChange}/>
             </FieldWrapper>
         );
     }
 
-    private renderDateInput(label: string, name: string): JSX.Element {
+    public renderDateInput(label: string, name: string): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <DatePicker onDayChange={this.handleDayChange} {...((this.editAdd || this.useExisting) && {value: this.props.formData ? this.props.formData[name] : ""})}
-                    placeholder="D-M-YYYY" inputProps={{name: name}} key={name}/>
+                    placeholder="D-M-YYYY" inputProps={{name}} key={name}/>
             </FieldWrapper>
         );
     }
 
-    private renderDropdown(label: string, options: Array<any>, key: string, multi?: boolean): JSX.Element {
+    public renderDropdown(label: string, options: any[], key: string, multi?: boolean): JSX.Element {
         return (
             <FieldWrapper id={name} label={label}>
                 <select className="optionTitle" key={key} name={key} {...(multi && {multiple: true, size: 8})} defaultValue="default" onChange={this.props.handleInputChange}>
-                    <option value="default" disabled>Select an option</option>
+                    <option value="default" disabled={true}>Select an option</option>
                     {options && options.map((opt, index) => {
                         return <option key={index} value={opt.value} {...(opt.value === "-" && {disabled: true})}>{opt.label}</option>;
                     })}
@@ -95,7 +97,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderFileInput(label: string, type: string): JSX.Element {
+    public renderFileInput(label: string, type: string): JSX.Element {
         return (
             <FieldWrapper id="fileUpload" label={label}>
                 <DropzoneComponent config={this.fileDropConfig} djsConfig={{params: {fileType: type}, ...this.djsConfig}} eventHandlers={this.djsEvents}/>
@@ -103,11 +105,11 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderTable(label: string, key: string, fields: Array<any>): JSX.Element {
+    public renderTable(label: string, key: string, fields: any[]): JSX.Element {
         return <FormOptionsTable editable={false} fields={fields} formData={this.props.formData} formKey={key} modifyState={this.props.modifyState} options={this.props.formData[key]} renderInput={this.renderFromObjectKey}/>;
     }
 
-    private renderInnerFormSection(value: object, key: string, label: string): JSX.Element {
+    public renderInnerFormSection(value: object, key: string, label: string): JSX.Element {
         return (
             <div>
                 <label>{label}</label>
@@ -122,14 +124,14 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
         );
     }
 
-    private renderFromObjectKey = (key: string, obj: Object, parentKey?: string): JSX.Element => {
+    public renderFromObjectKey = (key: string, obj: object, parentKey?: string): JSX.Element => {
         const value: any = obj[key].type;
         const label: string = obj[key].label;
-        const options: Array<any> = obj[key].options;
-        const fields: Array<any> = obj[key].fields;
+        const options: any[] = obj[key].options;
+        const fields: any[] = obj[key].fields;
         const fileType: string = obj[key].fileType;
         const pLabel: string = startCase(parentKey);
-        const times: Array<object> = this.buildTimesList(2);
+        const times: object[] = this.buildTimesList(2);
 
         // If key is an int, we know we're looking at an array.
         if(!isNaN(parseInt(key, 10))) {

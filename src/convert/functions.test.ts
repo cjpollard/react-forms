@@ -1,5 +1,5 @@
 import {expect} from "chai";
-const fn = require("../../../user_modules/functions");
+import * as fn from "./functions";
 
 describe("Module function tests", () => {
 
@@ -116,18 +116,6 @@ describe("Module function tests", () => {
             "stringArray": [""]
         };
         expect(fn.mergeFormWithSchema(formData, schema)).to.deep.equal(formData);
-    });
-
-    it("can validate some data based on a schema", () => {
-        const data = {
-            "some": "string",
-            "number": 1
-        };
-        const schema = {
-            "some": {type: "string"},
-            "number": {type: "number"}
-        };
-        expect(fn.validate(data, schema)).to.be.true;
     });
 
 });

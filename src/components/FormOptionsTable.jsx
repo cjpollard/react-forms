@@ -9,9 +9,9 @@ class FormOptionsTable extends Component {
         super(props);
         this.state = {
             fields: {...this.props.fields},
-            options: [],
             optionEdit: false,
-            optionID: -1
+            optionID: -1,
+            options: []
         };
         this.key = this.props.formKey;
     }
@@ -24,7 +24,9 @@ class FormOptionsTable extends Component {
     }
 
     handleOptionChange = (e) => {
-        e && e.preventDefault();
+        if(e) {
+            e.preventDefault();
+        }
         const {name, value} = e.target;
 
         this.setState({
@@ -52,14 +54,18 @@ class FormOptionsTable extends Component {
     }
 
     insertOption = (e) => {
-        e && e.preventDefault();
+        if(e) {
+            e.preventDefault();
+        }
         const key = this.key;
         const index = this.state.optionID;
         const newOpt = {
             ...this.props.formData
         };
         for(let formItem in newOpt) {
-            if(Object.keys(this.props.fields).indexOf(formItem) === -1) delete newOpt[formItem];
+            if(Object.keys(this.props.fields).indexOf(formItem) === -1) {
+                delete newOpt[formItem];
+            }
         }
         if(this.state.optionID === -1) { // If we're not editing an option
             this.setState(prevState => ({options: [...prevState.options, newOpt]}), () => {
@@ -94,10 +100,10 @@ class FormOptionsTable extends Component {
                         {options && options.length > 0 && options.map((opt, index) => {
                             return (
                                 <tr key={index}>
-                                    {Object.keys(opt).map((val, index) => {
+                                    {Object.keys(opt).map((val, i) => {
                                         if(Object.keys(fields).indexOf(val) > -1) {
                                             return (
-                                                <td key={index} className="optionDetail">{opt[val]}</td>
+                                                <td key={i} className="optionDetail">{opt[val]}</td>
                                             );
                                         }
                                     })}
