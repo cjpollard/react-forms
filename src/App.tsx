@@ -14,12 +14,12 @@ class App extends React.Component {
         </header>
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
-          <FormWrapper id="new-form">
-            <FieldWrapper id="textInput" label="label">
-              <input id="textInput" type="text" className="form-control"/>
-            </FieldWrapper>
-          </FormWrapper>
         </p>
+        <FormWrapper id="new-form">
+          <FieldWrapper id="textInput" label="label">
+            <input id="textInput" type="text" className="form-control"/>
+          </FieldWrapper>
+        </FormWrapper>
       </div>
     );
   }

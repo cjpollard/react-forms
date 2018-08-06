@@ -1,11 +1,32 @@
 "use strict";
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import startCase from "lodash/startCase";
-import update from "immutability-helper";
+import * as React from 'react';
 
-class FormOptionsTable extends Component {
-    constructor(props) {
+import update from "immutability-helper";
+import {startCase} from 'lodash';
+
+export interface IFormOptionsTableProps {
+    editable: boolean,
+    fields: object,
+    formData: object,
+    formKey: string,
+    modifyState: any,
+    options: object[],
+    renderInput: any,
+}
+
+export interface IFormOptionsTableState {
+    fields: object,
+    optionEdit: boolean,
+    optionID: number,
+    options: object[],
+    option: object
+}
+
+class FormOptionsTable extends React.Component<IFormOptionsTableProps, IFormOptionsTableState> {
+    public state: any;
+    private key: string;
+
+    constructor(props: IFormOptionsTableProps) {
         super(props);
         this.state = {
             fields: {...this.props.fields},
@@ -16,17 +37,15 @@ class FormOptionsTable extends Component {
         this.key = this.props.formKey;
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         if(this.props.options !== null && this.props.options !== undefined) {
             this.setState({options: [...this.props.options]});
             this.updateFormInfo(this.props.options);
         }
     }
 
-    handleOptionChange = (e) => {
-        if(e) {
-            e.preventDefault();
-        }
+    public handleOptionChange = (e?: any) => {
+        e && e.preventDefault();
         const {name, value} = e.target;
 
         this.setState({
@@ -39,30 +58,29 @@ class FormOptionsTable extends Component {
         });
     }
 
-    handleOptionDelete = (e) => {
-        let tempOptions = this.state.options;
+    public handleOptionDelete = (e?: any) => {
+        const tempOptions = this.state.options;
         tempOptions.splice(e.currentTarget.getAttribute("data-id"), 1);
         this.setState({options: tempOptions});
     }
 
-    handleOptionEdit = (e) => {
+    public handleOptionEdit = (e?: any) => {
         const option = this.state.options[e.currentTarget.getAttribute("data-id")];
-        this.setState({option:option, optionEdit:true, optionID:e.currentTarget.getAttribute("data-id")});
+        this.setState({option, optionEdit:true, optionID:e.currentTarget.getAttribute("data-id")});
         this.props.modifyState({
             ...option
         });
     }
 
-    insertOption = (e) => {
-        if(e) {
-            e.preventDefault();
-        }
+    public insertOption = (e?: any) => {
+        e && e.preventDefault();
+
         const key = this.key;
         const index = this.state.optionID;
         const newOpt = {
             ...this.props.formData
         };
-        for(let formItem in newOpt) {
+        for(const formItem in newOpt) {
             if(Object.keys(this.props.fields).indexOf(formItem) === -1) {
                 delete newOpt[formItem];
             }
@@ -72,7 +90,7 @@ class FormOptionsTable extends Component {
                 this.props.modifyState({[key]: this.state.options});
             });
         } else { // We're editing an option
-            let newState = update(this.state, {
+            const newState = update(this.state, {
                 options: {
                     [index]: { $set: newOpt}
                 }
@@ -83,13 +101,13 @@ class FormOptionsTable extends Component {
         }
     }
 
-    updateFormInfo = (options) => {
+    public updateFormInfo = (options: any) => {
         this.props.modifyState({
             [this.key]: [...options]
         });
     }
 
-    render() {
+    public render() {
         const {fields, options} = this.state;
 
         return (
@@ -97,7 +115,7 @@ class FormOptionsTable extends Component {
                 <label>{startCase(this.props.formKey)}</label>
                 <table id="productOptionsTable">
                     <tbody>
-                        {options && options.length > 0 && options.map((opt, index) => {
+                        {options && options.length > 0 && options.map((opt: object, index: number) => {
                             return (
                                 <tr key={index}>
                                     {Object.keys(opt).map((val, i) => {
@@ -105,10 +123,12 @@ class FormOptionsTable extends Component {
                                             return (
                                                 <td key={i} className="optionDetail">{opt[val]}</td>
                                             );
+                                        } else {
+                                            return null;
                                         }
                                     })}
-                                    {this.props.editable && <td className="fa fa-wrench" data-id={index} onClick={this.handleOptionEdit}></td>}
-                                    <td className="fa fa-trash" data-id={index} onClick={this.handleOptionDelete}></td>
+                                    {this.props.editable && <td className="fa fa-wrench" data-id={index} onClick={this.handleOptionEdit}/>}
+                                    <td className="fa fa-trash" data-id={index} onClick={this.handleOptionDelete}/>
                                 </tr>
                             );
                         })}
@@ -129,15 +149,5 @@ class FormOptionsTable extends Component {
         );
     }
 }
-
-FormOptionsTable.propTypes = {
-    editable: PropTypes.bool,
-    fields: PropTypes.object,
-    formData: PropTypes.object,
-    formKey: PropTypes.string,
-    modifyState: PropTypes.func,
-    options: PropTypes.arrayOf(PropTypes.object),
-    renderInput: PropTypes.func,
-};
 
 export default FormOptionsTable;
