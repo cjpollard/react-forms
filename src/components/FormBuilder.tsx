@@ -10,6 +10,7 @@ export interface IFormBuilderProps {
     fileUpdater: (file: object) => void,
     formData: any,
     formScheme: object,
+    handleFormSubmit: (event: React.FormEvent) => void,
     handleInputChange: (event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => void,
     id: string,
     modifyState: (state: any) => void
@@ -55,6 +56,12 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
     public handleDayChange = (day: string, inputProps: any): void => {
         const name: string = inputProps.name || "date";
         this.props.modifyState({[name]: day});
+    }
+
+    public handleFormSubmit = (e: any) => {
+        e && e.preventDefault();
+        console.log(this.props.formData);
+        this.props.handleFormSubmit(e);
     }
 
     public renderStringInput(label: string, name: string, placeholder: string): JSX.Element {
@@ -166,7 +173,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps> {
     public render(): JSX.Element {
         const {formScheme, id} = this.props;
         return(
-            <FormWrapper id={id}>
+            <FormWrapper id={id} submitLabel="Submit" handleFormSubmit={this.handleFormSubmit}>
                 {Object.keys(formScheme).map(key => this.renderFromObjectKey(key, formScheme))}
             </FormWrapper>
         );

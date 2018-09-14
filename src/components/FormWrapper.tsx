@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export interface IFormWrapperProps {id: string}
+export interface IFormWrapperProps {id: string, submitLabel: string, handleFormSubmit: (e: any) => void}
 
 export class FormWrapper extends React.Component<IFormWrapperProps> {
 
@@ -9,10 +9,11 @@ export class FormWrapper extends React.Component<IFormWrapperProps> {
     }
 
     public render(): JSX.Element {
-        const {id, children} = this.props;
+        const {id, submitLabel, children, handleFormSubmit} = this.props;
         return (
-            <form id={id}>
+            <form id={id} onSubmit={handleFormSubmit}>
                 {children}
+                <input type="submit" value={submitLabel}/>
             </form>
         );
     }
