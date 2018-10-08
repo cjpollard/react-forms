@@ -20,11 +20,13 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <FormWrapper id="new-form" submitLabel="Submit" handleFormSubmit={this.onSubmit}>
-          <FieldWrapper id="textInput" label="label">
-            <input id="textInput" type="text" className="form-control"/>
-          </FieldWrapper>
-        </FormWrapper>
+        <div className="container">
+          <FormWrapper id="new-form" submitLabel="Submit" handleFormSubmit={this.onSubmit}>
+            <FieldWrapper id="textInput" label="label">
+              <input id="textInput" type="text" className="form-control"/>
+            </FieldWrapper>
+          </FormWrapper>
+        </div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 "use strict";
 import * as React from 'react';
 
-import update from "immutability-helper";
+import update from 'immutability-helper';
 import {startCase} from 'lodash';
 
 export interface IFormOptionsTableProps {
