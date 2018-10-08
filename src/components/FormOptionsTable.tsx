@@ -127,8 +127,8 @@ class FormOptionsTable extends React.Component<IFormOptionsTableProps, IFormOpti
                                             return null;
                                         }
                                     })}
-                                    {this.props.editable && <td className="fa fa-wrench" data-id={index} onClick={this.handleOptionEdit}/>}
-                                    <td className="fa fa-trash" data-id={index} onClick={this.handleOptionDelete}/>
+                                    {this.props.editable && <td className="fas fa-wrench" data-id={index} onClick={this.handleOptionEdit}/>}
+                                    <td className="fas fa-trash" data-id={index} onClick={this.handleOptionDelete}/>
                                 </tr>
                             );
                         })}
